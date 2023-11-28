@@ -9,13 +9,12 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import ClearIcon from '@mui/icons-material/Clear';
-
-let nextId = 0;
+import { newID } from './utils/newId';
 
 export const TaskList = ({ handleDel, list }) => {
   return (
     <div style={{ width: 350 }}>
-      {list.map((task, i) => (
+      {list.map((task) => (
         <Box
           key={task.id}
           sx={{
@@ -44,7 +43,7 @@ function App() {
   const [text, setText] = useState('');
 
   const handleAddClick = () => {
-    setTaskList((prev) => [...prev, { id: nextId++, text }]);
+    setTaskList((prev) => [...prev, { id: newID(), text }]);
     setText('');
   };
 
