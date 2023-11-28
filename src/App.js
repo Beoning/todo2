@@ -10,12 +10,14 @@ import {
 import { useState } from 'react';
 import ClearIcon from '@mui/icons-material/Clear';
 
+let nextId = 0;
+
 export const TaskList = ({ handleDel, list }) => {
   return (
     <div style={{ width: 350 }}>
-      {list.map((task) => (
+      {list.map((task, i) => (
         <Box
-          key={task}
+          key={task.id}
           sx={{
             marginTop: 1,
             marginBottom: 1,
@@ -25,9 +27,9 @@ export const TaskList = ({ handleDel, list }) => {
             justifyContent: 'space-between',
           }}
         >
-          <div style={{ marginLeft: 2 }}>{task}</div>
+          <div style={{ marginLeft: 2 }}>{task.text}</div>
           <div>
-            <a onClick={() => handleDel(task)}>
+            <a onClick={() => handleDel(task.id)}>
               <ClearIcon style={{ color: '#b9b9b9' }} />
             </a>
           </div>
@@ -39,13 +41,17 @@ export const TaskList = ({ handleDel, list }) => {
 
 function App() {
   const [taskList, setTaskList] = useState([]);
+  const [text, setText] = useState('');
 
   const handleAddClick = () => {
-    //TODO add click
+    setTaskList((prev) => [...prev, { id: nextId++, text }]);
+    setText('');
   };
 
-  const handleDelClick = (del) => {
-    //TODO delete click
+  const handleDelClick = (id) => {
+    setTaskList((prev) => {
+      return prev.filter((task) => task.id !== id);
+    });
   };
   return (
     <Container sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -60,10 +66,16 @@ function App() {
           </Toolbar>
         </AppBar>
         <div style={{ margin: 5 }}>
-          <TextField multiline sx={{ width: 340 }} rows={6} />
+          <TextField
+            multiline
+            sx={{ width: 340 }}
+            rows={6}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
         </div>
         <div>
-          <Button color={'primary'} onClick={handleAddClick}>
+          <Button disabled={!text} color={'primary'} onClick={handleAddClick}>
             add
           </Button>
         </div>
